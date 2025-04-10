@@ -14,8 +14,8 @@
             
             // For demo purposes only - would be replaced with real data handling
             document.getElementById('addRecordForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Record would be saved to database here!');
+                // e.preventDefault();
+                // alert('Record would be saved to database here!');
                 const modal = bootstrap.Modal.getInstance(document.getElementById('addRecordModal'));
                 modal.hide();
             });
