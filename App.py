@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -40,6 +40,8 @@ def insert():
         my_data = Data(name, email, phone)
         db.session.add(my_data)
         db.session.commit()
+
+        flash("Data Inserted Successfully")
 
         return redirect(url_for('Index'))
 
