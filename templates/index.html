@@ -6,10 +6,9 @@
 
     {% include 'header.html' %}
 
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages() %}
-
         {% if messages %}
-
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {% for message in messages %}
                     {{ message }}<br>
@@ -17,15 +16,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
-
         {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ error }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
         {% endif %}
-
     {% endwith %}
 
     <!-- Records Table -->
@@ -36,61 +32,72 @@
                     <h5 class="mb-0">Records</h5>
                 </div>
                 <div class="col-auto">
-                    <span class="badge bg-primary" id="recordCount">3 Records</span>
+                    <span class="badge bg-primary" id="recordCount">{{ employees|length }} Records</span>
                 </div>
             </div>
         </div>
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% for row in employees %}
-                    <tr>
-                        <th>{{row.id}}</th>
-                        <td>{{row.name}}</td>
-                        <td>{{row.email}}</td>
-                        <td>{{row.phone}}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewRecordModal"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editRecordModal"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteRecordModal"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-     <!-- Edit Record Modal -->
-     <div class="modal fade" id="editRecordModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form class="modal-content" id="editRecordForm" method="POST" action="">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Record</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control mb-3" name="name" value="John Smith" required>
-                    <input type="email" class="form-control mb-3" name="email" value="john@example.com" required>
-                    <input type="text" class="form-control mb-3" name="phone" value="0722000000" required>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit">Update Record</button>
-                </div>
-            </form>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in employees %}
+                        <tr>
+                            <th>{{ row.id }}</th>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.email }}</td>
+                            <td>{{ row.phone }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#viewRecordModal" 
+                                            data-id="{{ row.id }}" 
+                                            data-name="{{ row.name }}" 
+                                            data-email="{{ row.email }}" 
+                                            data-phone="{{ row.phone }}" 
+                                            aria-label="View" 
+                                            data-bs-toggle="tooltip" 
+                                            title="View Record">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editRecordModal" 
+                                            data-id="{{ row.id }}" 
+                                            data-name="{{ row.name }}" 
+                                            data-email="{{ row.email }}" 
+                                            data-phone="{{ row.phone }}" 
+                                            aria-label="Edit" 
+                                            data-bs-toggle="tooltip" 
+                                            title="Edit Record">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteRecordModal" 
+                                            data-id="{{ row.id }}" 
+                                            data-name="{{ row.name }}" 
+                                            aria-label="Delete" 
+                                            data-bs-toggle="tooltip" 
+                                            title="Delete Record">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -124,42 +131,123 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Name:</strong> John Smith</p>
-                    <p><strong>Email:</strong> john@example.com</p>
-                    <p><strong>Phone:</strong> 0722000000</p>
+                    <p><strong>ID:</strong> <span id="viewId"></span></p>
+                    <p><strong>Name:</strong> <span id="viewName"></span></p>
+                    <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+                    <p><strong>Phone:</strong> <span id="viewPhone"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-warning" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#editRecordModal">Edit</button>
                 </div>
             </div>
         </div>
     </div>
 
-   
+    <!-- Edit Record Modal -->
+    <div class="modal fade" id="editRecordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="POST" action="{{ url_for('update') }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editId">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="editName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" id="editEmail" required>
+                    </div>
+                    <div class="mb-3,三>
+                        <label for="editPhone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" name="phone" id="editPhone" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Delete Record Modal -->
     <div class="modal fade" id="deleteRecordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form class="modal-content" method="POST" action="">
+            <form class="modal-content" method="POST" action="{{ url_for('delete') }}">
                 <div class="modal-header">
                     <h5 class="modal-title">Confirm Delete</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
                         Are you sure you want to delete this record?
                     </div>
-                    <p><strong>Name:</strong> John Smith</p>
-                    <p><strong>Email:</strong> john@example.com</p>
+                    <p><strong>ID:</strong> <span id="deleteId"></span></p>
+                    <p><strong>Name:</strong> <span id="deleteName"></span></p>
+                    <input type="hidden" name="id" id="deleteIdInput">
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="submit">Delete Record</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Record</button>
                 </div>
             </form>
         </div>
     </div>
 
 </div>
+
+<!-- JavaScript for Dynamic Modals and Tooltips -->
+<script>
+    // View Modal
+    var viewModal = document.getElementById('viewRecordModal');
+    viewModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var name = button.getAttribute('data-name');
+        var email = button.getAttribute('data-email');
+        var phone = button.getAttribute('data-phone');
+        var modal = this;
+        modal.querySelector('#viewId').textContent = id;
+        modal.querySelector('#viewName').textContent = name;
+        modal.querySelector('#viewEmail').textContent = email;
+        modal.querySelector('#viewPhone').textContent = phone;
+    });
+
+    // Edit Modal
+    var editModal = document.getElementById('editRecordModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var name = button.getAttribute('data-name');
+        var email = button.getAttribute('data-email');
+        var phone = button.getAttribute('data-phone');
+        var modal = this;
+        modal.querySelector('#editId').value = id;
+        modal.querySelector('#editName').value = name;
+        modal.querySelector('#editEmail').value = email;
+        modal.querySelector('#editPhone').value = phone;
+    });
+
+    // Delete Modal
+    var deleteModal = document.getElementById('deleteRecordModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var name = button.getAttribute('data-name');
+        var modal = this;
+        modal.querySelector('#deleteId').textContent = id;
+        modal.querySelector('#deleteName').textContent = name;
+        modal.querySelector('#deleteIdInput').value = id;
+    });
+
+    // Initialize Tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
 {% endblock %}

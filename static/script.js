@@ -82,4 +82,6 @@
                 const visibleRows = Array.from(table.querySelectorAll('tbody tr')).filter(row => row.style.display !== 'none');
                 document.getElementById('recordCount').textContent = visibleRows.length + ' Records';
             }
+        
+                
         });
