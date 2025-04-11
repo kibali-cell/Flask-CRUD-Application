@@ -52,11 +52,13 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    {% for row in employees %}
                     <tr>
-                        <th>1</th>
-                        <td>John Smith</td>
-                        <td>john@example.com</td>
-                        <td>0722000000</td>
+                        <th>{{row.id}}</th>
+                        <td>{{row.name}}</td>
+                        <td>{{row.email}}</td>
+                        <td>{{row.phone}}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewRecordModal"><i class="fas fa-eye"></i></button>
@@ -65,9 +67,30 @@
                             </div>
                         </td>
                     </tr>
-                    <!-- Add more rows dynamically -->
+                    {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+     <!-- Edit Record Modal -->
+     <div class="modal fade" id="editRecordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" id="editRecordForm" method="POST" action="">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control mb-3" name="name" value="John Smith" required>
+                    <input type="email" class="form-control mb-3" name="email" value="john@example.com" required>
+                    <input type="text" class="form-control mb-3" name="phone" value="0722000000" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Update Record</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -113,26 +136,7 @@
         </div>
     </div>
 
-    <!-- Edit Record Modal -->
-    <div class="modal fade" id="editRecordModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form class="modal-content" id="editRecordForm" method="POST" action="">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Record</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control mb-3" name="name" value="John Smith" required>
-                    <input type="email" class="form-control mb-3" name="email" value="john@example.com" required>
-                    <input type="text" class="form-control mb-3" name="phone" value="0722000000" required>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit">Update Record</button>
-                </div>
-            </form>
-        </div>
-    </div>
+   
 
     <!-- Delete Record Modal -->
     <div class="modal fade" id="deleteRecordModal" tabindex="-1" aria-hidden="true">
